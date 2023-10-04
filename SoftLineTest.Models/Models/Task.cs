@@ -10,8 +10,8 @@ namespace SoftLineTest.Models.Models
 
         public string Name { get; set; }
         public string Description { get; set; }
-
-        [ForeignKey("StatusID")]
+        public int StatusId { get; set; }
+        [ForeignKey("StatusId")]
         public virtual Status Status { get; set; }
     }
 }
