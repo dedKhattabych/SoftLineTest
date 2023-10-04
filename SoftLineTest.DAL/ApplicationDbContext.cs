@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SoftLineTest.Models.Models;
 
 namespace SoftLineTest.DAL
 {
     public class ApplicationDbContext : DbContext
     {
+        public DbSet<Status> Status { get; set; }
         public ApplicationDbContext()
         {
 
