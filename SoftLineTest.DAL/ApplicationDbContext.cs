@@ -6,6 +6,7 @@ namespace SoftLineTest.DAL
     public class ApplicationDbContext : DbContext
     {
         public DbSet<Status> Status { get; set; }
+        public DbSet<Task> Task { get; set; }
         public ApplicationDbContext()
         {
 
