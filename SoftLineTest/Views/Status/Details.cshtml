@@ -1,18 +1,11 @@
 ﻿@model SoftLineTest.Models.Models.Status
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <link rel="stylesheet" href="~/path/to/your/styles.css" />
-    <meta name="viewport" content="width=device-width" />
-    <title>Details</title>
-</head>
-<body>
+<h1>Details</h1>
 
 <div>
     <h4>Status</h4>
@@ -30,5 +23,3 @@
     <a asp-action="Edit" asp-route-id="@Model.StatusID">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
-</body>
-</html>

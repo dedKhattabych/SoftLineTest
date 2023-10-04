@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SoftLineTest.DAL;
 using SoftLineTest.Models.Models;
+using SoftLineTest.Models.ViewModels;
 using Task = SoftLineTest.Models.Models.Task;
 
 namespace SoftLineTest.Controllers
@@ -23,8 +24,20 @@ namespace SoftLineTest.Controllers
         // GET: Task
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Task.Include(t => t.Status);
-            return View(await applicationDbContext.ToListAsync());
+            var tasks = _context.Task;
+
+            if (tasks == null)
+            {
+                return View();
+            }
+
+            var listOfTasks = tasks.ToList();
+            for (int i = 0; i < listOfTasks.Count; i++)
+            {
+                listOfTasks[i].Status = _context.Status.FirstOrDefault(u => u.StatusID == listOfTasks[i].StatusId);
+            }
+
+            return View(listOfTasks);
         }
 
         // GET: Task/Details/5
@@ -49,8 +62,17 @@ namespace SoftLineTest.Controllers
         // GET: Task/Create
         public IActionResult Create()
         {
-            ViewData["StatusId"] = new SelectList(_context.Status, "StatusID", "StatusID");
-            return View();
+            TaskVM taskVM = new TaskVM()
+            {
+                Task = new Task(),
+                StatusSelectList = _context.Status.Select(i => new SelectListItem
+                {
+                    Text = i.StatusName,
+                    Value = i.StatusID.ToString()
+                })
+            };
+
+            return View(taskVM);
         }
 
         // POST: Task/Create
@@ -58,16 +80,24 @@ namespace SoftLineTest.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,StatusId")] Task task)
+        public async Task<IActionResult> Create(TaskVM taskVM)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(task);
+                _context.Add(taskVM.Task);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StatusId"] = new SelectList(_context.Status, "StatusID", "StatusID", task.StatusId);
-            return View(task);
+            taskVM = new TaskVM()
+            {
+                Task = new Task(),
+                StatusSelectList = _context.Status.Select(i => new SelectListItem
+                {
+                    Text = i.StatusName,
+                    Value = i.StatusID.ToString()
+                })
+            };
+            return View(taskVM);
         }
 
         // GET: Task/Edit/5
@@ -78,13 +108,24 @@ namespace SoftLineTest.Controllers
                 return NotFound();
             }
 
-            var task = await _context.Task.FindAsync(id);
-            if (task == null)
+            TaskVM taskVM = new TaskVM()
+            {
+                Task = new Task(),
+                StatusSelectList = _context.Status.Select(i => new SelectListItem
+                {
+                    Text = i.StatusName,
+                    Value = i.StatusID.ToString()
+                })
+            };
+
+
+            taskVM.Task = _context.Task.FirstOrDefault(u => u.Id == id);
+            if (taskVM.Task == null)
             {
                 return NotFound();
             }
-            ViewData["StatusId"] = new SelectList(_context.Status, "StatusID", "StatusID", task.StatusId);
-            return View(task);
+            taskVM.Task.Status = _context.Status.FirstOrDefault(u => u.StatusID == taskVM.Task.StatusId);
+            return View(taskVM);
         }
 
         // POST: Task/Edit/5
@@ -92,9 +133,9 @@ namespace SoftLineTest.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,StatusId")] Task task)
+        public async Task<IActionResult> Edit(int id, TaskVM taskVM)
         {
-            if (id != task.Id)
+            if (id != taskVM.Task.Id)
             {
                 return NotFound();
             }
@@ -103,12 +144,12 @@ namespace SoftLineTest.Controllers
             {
                 try
                 {
-                    _context.Update(task);
+                    _context.Update(taskVM.Task);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TaskExists(task.Id))
+                    if (!TaskExists(taskVM.Task.Id))
                     {
                         return NotFound();
                     }
@@ -119,8 +160,8 @@ namespace SoftLineTest.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StatusId"] = new SelectList(_context.Status, "StatusID", "StatusID", task.StatusId);
-            return View(task);
+            taskVM.Task.Status = _context.Status.FirstOrDefault(u => u.StatusID == taskVM.Task.StatusId);
+            return View(taskVM);
         }
 
         // GET: Task/Delete/5

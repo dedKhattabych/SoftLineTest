@@ -1,17 +1,12 @@
 ﻿@model IEnumerable<SoftLineTest.Models.Models.Task>
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Task Manager";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!DOCTYPE html>
+<h1>Index</h1>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-</head>
-<body>
 <p>
     <a asp-action="Create">Create New</a>
 </p>
@@ -31,7 +26,7 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+        @foreach (var item in Model) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
@@ -40,7 +35,7 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Status.StatusID)
+                @Html.DisplayFor(modelItem => item.Status.StatusName)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
@@ -51,5 +46,3 @@
 }
     </tbody>
 </table>
-</body>
-</html>

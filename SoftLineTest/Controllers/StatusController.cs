@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SoftLineTest.DAL;
 using SoftLineTest.Models.Models;
+using SoftLineTest.Models.ViewModels;
 
 namespace SoftLineTest.Controllers
 {
