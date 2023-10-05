@@ -16,19 +16,19 @@ namespace SoftLineTest.DAL
                     db.Status.Add(
                         new Status()
                         {
-                            StatusID = 1,
+                            StatusID = 0,
                             StatusName = "Created"
                         });
                     db.Status.Add(
                         new Status()
                         {
-                            StatusID = 2,
+                            StatusID = 0,
                             StatusName = "At work"
                         });
                     db.Status.Add(
                         new Status()
                         {
-                            StatusID = 3,
+                            StatusID = 0,
                             StatusName = "Completed"
                         });
                     db.SaveChanges();
