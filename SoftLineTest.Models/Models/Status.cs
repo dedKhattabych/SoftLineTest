@@ -11,7 +11,7 @@ namespace SoftLineTest.Models.Models
     {
         [Key]
         public int StatusID { get; set; }
-
+        [Required]
         public string StatusName { get; set; }
     }
 }
